@@ -20,7 +20,7 @@ spec:
         stage('Terraform Init') {
             steps {
                 container('terraform') {
-                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
                         sh 'terraform init'
                     }
                 }
@@ -30,7 +30,7 @@ spec:
         stage('Terraform Validate') {
             steps {
                 container('terraform') {
-                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
                         sh 'terraform validate'
                     }
                 }
@@ -40,7 +40,7 @@ spec:
         stage('Terraform Plan') {
             steps {
                 container('terraform') {
-                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
                         sh 'terraform plan -var-file=dev.tfvars -out=tfplan'
                     }
                 }
@@ -58,7 +58,7 @@ spec:
         stage('Terraform Apply') {
             steps {
                 container('terraform') {
-                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
                         sh 'terraform apply -auto-approve tfplan'
                     }
                 }
