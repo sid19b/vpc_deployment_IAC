@@ -15,6 +15,12 @@ spec:
         }
     }
 
+    environment {
+    TF_IN_AUTOMATION = "true"
+    TF_LOG_COLOR     = "false"
+    }
+
+
     stages {
 
         stage('Terraform Init') {

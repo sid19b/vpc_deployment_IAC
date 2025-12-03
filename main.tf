@@ -28,7 +28,7 @@ module "subnet" {
 module "route" {
   source = "./modules/route_tables"
   vpc_id = local.vpc_id
-  igw_id = module.aws_internet_gateway.igw_id
+  igw_id = module.aws_internet_gw.igw_id
   cidr_range_route = local.cidr_range_route
   subnet_id = module.subnet.subnet_id
   Name = "${local.environment}_route"
