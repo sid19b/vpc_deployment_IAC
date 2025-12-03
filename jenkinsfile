@@ -70,5 +70,15 @@ spec:
                 }
             }
         }
+
+        stage('Terraform destroy') {
+            steps {
+                container('terraform') {
+                    withAWS(credentials: 'aws_cred', region: 'ap-south-1') {
+                        sh 'terraform destroy -auto-approve'
+                    }
+                }
+            }
+        }
     }
 }
