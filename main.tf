@@ -16,21 +16,21 @@ module "vpc_id" {
   Name = "${local.environment}_vpc"
 }
 
-module "aws_internet_gateway" {
+module "aws_internet_gw" {
   source = "./modules/internet_gw"
   vpc_id = module.vpc_id.vpc_id
   Name = "${local.environment}_IGW"
 }
 
 module "subnet" {
-  source = "./modules/subnet"
+  source = "./modules/subnets"
   vpc_id = local.vpc_id
   Name = "${local.environment}_subnet"
   cidr_range_subnet = local.cidr_range_subnet
 }
 
 module "route" {
-  source = "./modules/route_table"
+  source = "./modules/route_tables"
   vpc_id = local.vpc_id
   igw_id = module.aws_internet_gateway.igw_id
   cidr_range_route = local.cidr_range_route
