@@ -1,0 +1,68 @@
+pipeline {
+    agent {
+        kubernetes {
+            label "cicd-agent"
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: terraform
+      image: hashicorp/terraform:1.6.0
+      command: ['cat']
+      tty: true
+"""
+        }
+    }
+
+    stages {
+
+        stage('Terraform Init') {
+            steps {
+                container('terraform') {
+                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                        sh 'terraform init'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                container('terraform') {
+                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                        sh 'terraform validate'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                container('terraform') {
+                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                        sh 'terraform plan -var-file=dev.tfvars -out=tfplan'
+                    }
+                }
+            }
+        }
+
+        stage('Approve Deployment') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    input message: "Approve Terraform Apply?"
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                container('terraform') {
+                    withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                        sh 'terraform apply -auto-approve tfplan'
+                    }
+                }
+            }
+        }
+    }
+}
