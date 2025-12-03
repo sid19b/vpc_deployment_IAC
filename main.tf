@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "${var.region}"
-}
-
 locals {
   environment="amy"
   cidr_range_vpc="10.0.0.0/16"
